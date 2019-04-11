@@ -7,7 +7,7 @@ import dominio.Producto;
 
 public class GarantiaTestDataBuilder {
 
-	private static final String NOMBRECLIENTE = "Computador Lenovo";
+	private static final String NOMBRECLIENTE = "Richard Marrugo";
 	
 	private Producto producto;
 	private Date fechaSolicitudGarantia;

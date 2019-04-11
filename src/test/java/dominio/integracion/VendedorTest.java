@@ -21,8 +21,6 @@ public class VendedorTest {
 
 	private static final String COMPUTADOR_LENOVO = "Computador Lenovo";
 	
-	private static final String NOMBRE_CLIENTE = "Richard Marrugo";
-	
 	private SistemaDePersistencia sistemaPersistencia;
 	
 	private RepositorioProducto repositorioProducto;
@@ -49,7 +47,7 @@ public class VendedorTest {
 	public void generarGarantiaTest() {
 		
 		// arrange
-		GarantiaExtendida garantiaExtendida = new GarantiaTestDataBuilder().conNombreCliente(NOMBRE_CLIENTE).build();
+		GarantiaExtendida garantiaExtendida = new GarantiaTestDataBuilder().build();
 		Producto producto = new ProductoTestDataBuilder().conNombre(COMPUTADOR_LENOVO).build();
 		repositorioProducto.agregar(producto);
 		Vendedor vendedor = new Vendedor(repositorioProducto, repositorioGarantia);
@@ -68,7 +66,7 @@ public class VendedorTest {
 
 		// arrange
 		Producto producto = new ProductoTestDataBuilder().conNombre(COMPUTADOR_LENOVO).build();
-		GarantiaExtendida garantiaExtendida = new GarantiaTestDataBuilder().conNombreCliente(NOMBRE_CLIENTE).build();
+		GarantiaExtendida garantiaExtendida = new GarantiaTestDataBuilder().build();
 		
 		repositorioProducto.agregar(producto);
 		

@@ -14,7 +14,7 @@ import dominio.repositorio.RepositorioGarantiaExtendida;
 import testdatabuilder.ProductoTestDataBuilder;
 
 public class VendedorTest {
-
+	private static final String CODIGO = "S0IU1H1AT51";
 	@Test
 	public void productoYaTieneGarantiaTest() {
 		
@@ -57,5 +57,27 @@ public class VendedorTest {
 		
 		//assert
 		assertFalse(existeProducto);
+	}
+	
+	@Test
+	public void codigoProductoNoAplicaGarantiaTest() {
+		ProductoTestDataBuilder productoestDataBuilder = new ProductoTestDataBuilder().conCodigo(CODIGO);
+		Producto producto = productoestDataBuilder.build(); 
+		RepositorioGarantiaExtendida repositorioGarantia = mock(RepositorioGarantiaExtendida.class);
+		RepositorioProducto repositorioProducto = mock(RepositorioProducto.class);
+		Vendedor vendedor = new Vendedor(repositorioProducto, repositorioGarantia);
+		boolean tieneTresVocales = vendedor.tieneTresVocales(producto.getCodigo());
+		assertTrue(tieneTresVocales);
+	}
+	
+	@Test
+	public void codigoProductoAplicaGarantiaTest() {
+		ProductoTestDataBuilder productoestDataBuilder = new ProductoTestDataBuilder();
+		Producto producto = productoestDataBuilder.build(); 
+		RepositorioGarantiaExtendida repositorioGarantia = mock(RepositorioGarantiaExtendida.class);
+		RepositorioProducto repositorioProducto = mock(RepositorioProducto.class);
+		Vendedor vendedor = new Vendedor(repositorioProducto, repositorioGarantia);
+		boolean tieneTresVocales = vendedor.tieneTresVocales(producto.getCodigo());
+		assertFalse(tieneTresVocales);
 	}
 }
