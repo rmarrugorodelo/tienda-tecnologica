@@ -8,16 +8,20 @@ import org.junit.Before;
 import org.junit.Test;
 
 import dominio.Vendedor;
+import dominio.GarantiaExtendida;
 import dominio.Producto;
 import dominio.excepcion.GarantiaExtendidaException;
 import dominio.repositorio.RepositorioProducto;
 import dominio.repositorio.RepositorioGarantiaExtendida;
 import persistencia.sistema.SistemaDePersistencia;
+import testdatabuilder.GarantiaTestDataBuilder;
 import testdatabuilder.ProductoTestDataBuilder;
 
 public class VendedorTest {
 
 	private static final String COMPUTADOR_LENOVO = "Computador Lenovo";
+	
+	private static final String NOMBRE_CLIENTE = "Richard Marrugo";
 	
 	private SistemaDePersistencia sistemaPersistencia;
 	
@@ -43,14 +47,15 @@ public class VendedorTest {
 
 	@Test
 	public void generarGarantiaTest() {
-
+		
 		// arrange
+		GarantiaExtendida garantiaExtendida = new GarantiaTestDataBuilder().conNombreCliente(NOMBRE_CLIENTE).build();
 		Producto producto = new ProductoTestDataBuilder().conNombre(COMPUTADOR_LENOVO).build();
 		repositorioProducto.agregar(producto);
 		Vendedor vendedor = new Vendedor(repositorioProducto, repositorioGarantia);
-
+		
 		// act
-		vendedor.generarGarantia(producto.getCodigo());
+		vendedor.generarGarantia(producto.getCodigo(),garantiaExtendida.getNombreCliente());
 
 		// assert
 		Assert.assertTrue(vendedor.tieneGarantia(producto.getCodigo()));
@@ -63,16 +68,17 @@ public class VendedorTest {
 
 		// arrange
 		Producto producto = new ProductoTestDataBuilder().conNombre(COMPUTADOR_LENOVO).build();
+		GarantiaExtendida garantiaExtendida = new GarantiaTestDataBuilder().conNombreCliente(NOMBRE_CLIENTE).build();
 		
 		repositorioProducto.agregar(producto);
 		
 		Vendedor vendedor = new Vendedor(repositorioProducto, repositorioGarantia);
 
 		// act
-		vendedor.generarGarantia(producto.getCodigo());;
+		vendedor.generarGarantia(producto.getCodigo(),garantiaExtendida.getNombreCliente());;
 		try {
 			
-			vendedor.generarGarantia(producto.getCodigo());
+			vendedor.generarGarantia(producto.getCodigo(),garantiaExtendida.getNombreCliente());
 			fail();
 			
 		} catch (GarantiaExtendidaException e) {

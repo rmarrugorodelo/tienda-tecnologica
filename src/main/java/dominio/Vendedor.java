@@ -34,7 +34,7 @@ public class Vendedor {
 
 	}
 
-	public void generarGarantia(String codigo) {
+	public void generarGarantia(String codigo,String nombre) {
 		if (tieneGarantia(codigo)) {
 			throw new GarantiaExtendidaException(EL_PRODUCTO_TIENE_GARANTIA);
 		} else if (tieneTresVocales(codigo)) {
@@ -53,7 +53,7 @@ public class Vendedor {
 					precioGarantia = producto.getPrecio() * (PORCENTAJE_PARA_PRECIO_MENOR_A_TOPE / 100);
 				}
 				GarantiaExtendida garantiaExtendida = new GarantiaExtendida(producto, fechaSolicitudGarantia,
-						fechaFinGarantia, precioGarantia, "");
+						fechaFinGarantia, precioGarantia, nombre);
 				repositorioGarantia.agregar(garantiaExtendida);
 			}else {
 				throw new GarantiaExtendidaException(PRODUCTO_NO_EXISTE);
