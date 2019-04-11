@@ -88,9 +88,8 @@ public class Vendedor {
 				}
 				calendar.add(Calendar.DAY_OF_YEAR, 1);
 			}
-			if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
-					|| calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
-				calendar.add(Calendar.DAY_OF_YEAR, 1);
+			if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+				calendar.add(Calendar.DAY_OF_YEAR, 2);
 			}
 		} else {
 			calendar.add(Calendar.DAY_OF_YEAR, cantidadDeDias - 1);
