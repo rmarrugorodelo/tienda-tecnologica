@@ -3,9 +3,13 @@ package dominio.unitaria;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.util.Date;
 
 import org.junit.Test;
 
@@ -23,8 +27,9 @@ import testdatabuilder.ProductoTestDataBuilder;
 
 public class VendedorTest {
 	private static final String CODIGO = "S0IU1H1AT51";
-	private static final double PRECIO = 800000;
-	private static final double DELTA = 0.001;
+	private static final double PRECIO = 400000;
+	private static final String FECHA_FIN = "2018-11-23";
+	
 	@Test
 	public void productoYaTieneGarantiaTest() {
 		
@@ -92,6 +97,24 @@ public class VendedorTest {
 	}
 	
 	@Test
+	public void generarFechaGarantiaMenorPrecioTest() {
+		GarantiaExtendida garantiaExtendida = new GarantiaTestDataBuilder().conFechaFinGarantia(FECHA_FIN).build();
+		GenerarGarantiaExtendidaFactory factory = new GenerarGarantiaExtendidaMenorPrecioFactory();
+		IGenerarGarantiaExtendida garantiaExtendidaAbstract = factory.crear();
+		Date fechaFin = garantiaExtendidaAbstract.obtenerfechaFinGarantia(garantiaExtendida.getFechaSolicitudGarantia());
+		assertEquals(garantiaExtendida.getFechaFinGarantia(), fechaFin);
+	}
+	
+	@Test
+	public void generarFechaGarantiaMayorPrecioTest() {
+		GarantiaExtendida garantiaExtendida = new GarantiaTestDataBuilder().build();
+		GenerarGarantiaExtendidaFactory factory = new GenerarGarantiaExtendidaMayorPrecioFactory();
+		IGenerarGarantiaExtendida garantiaExtendidaAbstract = factory.crear();
+		Date fechaFin = garantiaExtendidaAbstract.obtenerfechaFinGarantia(garantiaExtendida.getFechaSolicitudGarantia());
+		assertEquals(garantiaExtendida.getFechaFinGarantia(), fechaFin);
+	}
+	
+	@Test
 	public void generarObjetoGarantiaMayorPrecioTest() {
 		ProductoTestDataBuilder productoestDataBuilder = new ProductoTestDataBuilder();
 		Producto producto = productoestDataBuilder.build(); 
@@ -99,6 +122,7 @@ public class VendedorTest {
 		GenerarGarantiaExtendidaFactory factory = new GenerarGarantiaExtendidaMayorPrecioFactory();
 		IGenerarGarantiaExtendida garantiaExtendidaAbstract = factory.crear();
 		garantiaExtendida = garantiaExtendidaAbstract.generaGarantiaExtendida(producto,garantiaExtendida.getNombreCliente());
+		assertNotNull(garantiaExtendida);
 	}
 	@Test
 	public void generarObjetoGarantiaMenorPrecioTest() {
@@ -108,5 +132,6 @@ public class VendedorTest {
 		GenerarGarantiaExtendidaFactory factory = new GenerarGarantiaExtendidaMenorPrecioFactory();
 		IGenerarGarantiaExtendida garantiaExtendidaAbstract = factory.crear();
 		garantiaExtendida = garantiaExtendidaAbstract.generaGarantiaExtendida(producto,garantiaExtendida.getNombreCliente());
+		assertNotNull(garantiaExtendida);
 	}
 }

@@ -10,6 +10,9 @@ import dominio.Producto;
 public class GarantiaTestDataBuilder {
 	private static final SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
 	private static final String NOMBRE_CLIENTE = "Richard Marrugo";
+	private static final String FECHA_SOLICITUD = "2018-08-16";
+	private static final String FECHA_FIN = "2019-04-06";
+
 	private Producto producto;
 	private Date fechaSolicitudGarantia;
 	private Date fechaFinGarantia;
@@ -18,36 +21,27 @@ public class GarantiaTestDataBuilder {
 
 	public GarantiaTestDataBuilder() {
 		this.nombreCliente = NOMBRE_CLIENTE;
+		this.fechaSolicitudGarantia = obtenerFechaDeString(FECHA_SOLICITUD);
+		this.fechaFinGarantia = obtenerFechaDeString(FECHA_FIN);
 
 	}
-
-	public GarantiaTestDataBuilder conProducto(Producto producto) {
-		this.producto = producto;
-		return this;
-	}
-
-	public GarantiaTestDataBuilder conFechaSolicitudGarantia(Date fechaSolicitudGarantia) {
-		this.fechaSolicitudGarantia = fechaSolicitudGarantia;
-		return this;
-	}
-
-	public GarantiaTestDataBuilder conFechaFinGarantia(Date fechaFinGarantia) {
-		this.fechaFinGarantia = fechaFinGarantia;
-		return this;
-	}
-
-	public GarantiaTestDataBuilder conPrecioGarantia(double precioGarantia) {
-		this.precioGarantia = precioGarantia;
-		return this;
-	}
-
-	public GarantiaTestDataBuilder conNombreCliente(String nombreCliente) {
-		this.nombreCliente = nombreCliente;
+	public GarantiaTestDataBuilder conFechaFinGarantia(String fechaFinGarantia) {
+		this.fechaFinGarantia = obtenerFechaDeString(fechaFinGarantia);
 		return this;
 	}
 
 	public GarantiaExtendida build() {
 		return new GarantiaExtendida(this.producto, this.fechaSolicitudGarantia, this.fechaFinGarantia,
 				this.precioGarantia, this.nombreCliente);
+	}
+
+	public Date obtenerFechaDeString(String fecha) {
+		try {
+			return formatoFecha.parse(fecha);
+		} catch (ParseException e) {
+
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

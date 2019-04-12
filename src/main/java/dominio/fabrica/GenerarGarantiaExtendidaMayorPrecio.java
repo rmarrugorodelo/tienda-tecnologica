@@ -9,16 +9,19 @@ import dominio.Producto;
 public class GenerarGarantiaExtendidaMayorPrecio implements IGenerarGarantiaExtendida {
 	public static final int DIAS = 200;
 	public static final int PORCENTAJE = 20;
+	public static final int CIEN = 100;
 
 	@Override
 	public GarantiaExtendida generaGarantiaExtendida(Producto producto, String nombreCliente) {
-		return new GarantiaExtendida(producto, new Date(), obtenerfechaFinGarantia(),
+		Date fechaSolicitud =  new Date();
+		return new GarantiaExtendida(producto,fechaSolicitud, obtenerfechaFinGarantia(fechaSolicitud),
 				calcularPrecioGarantia(producto.getPrecio()), nombreCliente);
 	}
 
 	@Override
-	public Date obtenerfechaFinGarantia() {
+	public Date obtenerfechaFinGarantia(Date fechaSolicitud) {
 		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(fechaSolicitud);
 		int dias = DIAS;
 		while (dias > 0) {
 			if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
@@ -34,7 +37,7 @@ public class GenerarGarantiaExtendidaMayorPrecio implements IGenerarGarantiaExte
 
 	@Override
 	public double calcularPrecioGarantia(double precio) {
-		return precio * (PORCENTAJE / 100);
+		return precio * (PORCENTAJE / CIEN);
 	}
 
 }
