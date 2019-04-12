@@ -1,4 +1,4 @@
-package dominio.factory;
+package dominio.fabrica;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -6,7 +6,7 @@ import java.util.Date;
 import dominio.GarantiaExtendida;
 import dominio.Producto;
 
-public class GarantiaExtendidaMayorPrecio extends GarantiaExtendidaAbstract {
+public class GenerarGarantiaExtendidaMayorPrecio implements IGenerarGarantiaExtendida {
 	public static final int DIAS = 200;
 	public static final int PORCENTAJE = 20;
 

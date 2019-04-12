@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dominio.excepcion.GarantiaExtendidaException;
-import dominio.factory.GarantiaExtendidaAbstract;
-import dominio.factory.GarantiaExtendidaFactory;
-import dominio.factory.GarantiaExtendidaMayorPrecioFactory;
-import dominio.factory.GarantiaExtendidaMenorPrecioFactory;
+import dominio.fabrica.GenerarGarantiaExtendidaFactory;
+import dominio.fabrica.GenerarGarantiaExtendidaMayorPrecioFactory;
+import dominio.fabrica.GenerarGarantiaExtendidaMenorPrecioFactory;
+import dominio.fabrica.IGenerarGarantiaExtendida;
 import dominio.repositorio.RepositorioGarantiaExtendida;
 
 public class Vendedor {
@@ -38,16 +38,16 @@ public class Vendedor {
 			Producto producto = repositorioProducto.obtenerPorCodigo(codigo);
 			if (producto != null) {
 				GarantiaExtendida garantiaExtendida = null;
-				GarantiaExtendidaFactory factory = null;
-				GarantiaExtendidaAbstract garantiaExtendidaAbstract = null;
+				GenerarGarantiaExtendidaFactory factory = null;
+				IGenerarGarantiaExtendida iGarantiaExtendida = null;
 				if (producto.getPrecio() > PRECIO_TOPE) {
-					factory = new GarantiaExtendidaMayorPrecioFactory();
-					garantiaExtendidaAbstract = factory.crear();
-					garantiaExtendida = garantiaExtendidaAbstract.generaGarantiaExtendida(producto,nombreCliente);
+					factory = new GenerarGarantiaExtendidaMayorPrecioFactory();
+					iGarantiaExtendida = factory.crear();
+					garantiaExtendida = iGarantiaExtendida.generaGarantiaExtendida(producto,nombreCliente);
 				} else {
-					factory = new GarantiaExtendidaMenorPrecioFactory();
-					garantiaExtendidaAbstract = factory.crear();
-					garantiaExtendida = garantiaExtendidaAbstract.generaGarantiaExtendida(producto,nombreCliente);
+					factory = new GenerarGarantiaExtendidaMenorPrecioFactory();
+					iGarantiaExtendida = factory.crear();
+					garantiaExtendida = iGarantiaExtendida.generaGarantiaExtendida(producto,nombreCliente);
 				}
 				repositorioGarantia.agregar(garantiaExtendida);
 			} else {

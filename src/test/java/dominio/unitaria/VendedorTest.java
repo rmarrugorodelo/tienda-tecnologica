@@ -10,10 +10,10 @@ import static org.mockito.Mockito.when;
 import org.junit.Test;
 
 import dominio.Vendedor;
-import dominio.factory.GarantiaExtendidaAbstract;
-import dominio.factory.GarantiaExtendidaFactory;
-import dominio.factory.GarantiaExtendidaMayorPrecioFactory;
-import dominio.factory.GarantiaExtendidaMenorPrecioFactory;
+import dominio.fabrica.GenerarGarantiaExtendidaFactory;
+import dominio.fabrica.GenerarGarantiaExtendidaMayorPrecioFactory;
+import dominio.fabrica.GenerarGarantiaExtendidaMenorPrecioFactory;
+import dominio.fabrica.IGenerarGarantiaExtendida;
 import dominio.GarantiaExtendida;
 import dominio.Producto;
 import dominio.repositorio.RepositorioProducto;
@@ -92,23 +92,21 @@ public class VendedorTest {
 	}
 	
 	@Test
-	public void generarGarantiaMayorPrecioTest() {
+	public void generarObjetoGarantiaMayorPrecioTest() {
 		ProductoTestDataBuilder productoestDataBuilder = new ProductoTestDataBuilder();
 		Producto producto = productoestDataBuilder.build(); 
 		GarantiaExtendida garantiaExtendida = new GarantiaTestDataBuilder().build();
-		GarantiaExtendidaFactory factory = new GarantiaExtendidaMayorPrecioFactory();
-		GarantiaExtendidaAbstract garantiaExtendidaAbstract = factory.crear();
+		GenerarGarantiaExtendidaFactory factory = new GenerarGarantiaExtendidaMayorPrecioFactory();
+		IGenerarGarantiaExtendida garantiaExtendidaAbstract = factory.crear();
 		garantiaExtendida = garantiaExtendidaAbstract.generaGarantiaExtendida(producto,garantiaExtendida.getNombreCliente());
-		double precioGarantia = garantiaExtendidaAbstract.calcularPrecioGarantia(producto.getPrecio());
-		assertEquals(precioGarantia, garantiaExtendida.getPrecioGarantia(),0.2);
 	}
 	@Test
-	public void generarGarantiaMenorPrecioTest() {
+	public void generarObjetoGarantiaMenorPrecioTest() {
 		ProductoTestDataBuilder productoestDataBuilder = new ProductoTestDataBuilder().conPrecio(PRECIO);
 		Producto producto = productoestDataBuilder.build(); 
 		GarantiaExtendida garantiaExtendida = new GarantiaTestDataBuilder().build();
-		GarantiaExtendidaFactory factory = new GarantiaExtendidaMenorPrecioFactory();
-		GarantiaExtendidaAbstract garantiaExtendidaAbstract = factory.crear();
+		GenerarGarantiaExtendidaFactory factory = new GenerarGarantiaExtendidaMenorPrecioFactory();
+		IGenerarGarantiaExtendida garantiaExtendidaAbstract = factory.crear();
 		garantiaExtendida = garantiaExtendidaAbstract.generaGarantiaExtendida(producto,garantiaExtendida.getNombreCliente());
 	}
 }
