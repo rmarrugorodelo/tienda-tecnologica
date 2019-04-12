@@ -2,15 +2,14 @@ package dominio;
 
 import dominio.repositorio.RepositorioProducto;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 import dominio.excepcion.GarantiaExtendidaException;
+import dominio.factory.GarantiaExtendidaAbstract;
+import dominio.factory.GarantiaExtendidaFactory;
+import dominio.factory.GarantiaExtendidaMayorPrecioFactory;
+import dominio.factory.GarantiaExtendidaMenorPrecioFactory;
 import dominio.repositorio.RepositorioGarantiaExtendida;
 
 public class Vendedor {
@@ -19,11 +18,7 @@ public class Vendedor {
 	public static final String PRODUCTO_NO_CUENTA_CON_GARANTIA = "Este producto no cuenta con garantía extendida";
 	public static final String PRODUCTO_NO_EXISTE = "Este producto no existe";
 
-	public static final double PRECIO_TOPE = 500000D;
-	public static final int DIAS_PARA_PRECIO_MAYOR_A_TOPE = 200;
-	public static final int DIAS_PARA_PRECIO_MENOR_A_TOPE = 100;
-	public static final int PORCENTAJE_PARA_PRECIO_MAYOR_A_TOPE = 20;
-	public static final int PORCENTAJE_PARA_PRECIO_MENOR_A_TOPE = 10; 
+	public static final double PRECIO_TOPE = 500000;
 
 	private RepositorioProducto repositorioProducto;
 	private RepositorioGarantiaExtendida repositorioGarantia;
@@ -34,31 +29,31 @@ public class Vendedor {
 
 	}
 
-	public void generarGarantia(String codigo,String nombre) {
+	public void generarGarantia(String codigo, String nombreCliente) {
 		if (tieneGarantia(codigo)) {
 			throw new GarantiaExtendidaException(EL_PRODUCTO_TIENE_GARANTIA);
 		} else if (tieneTresVocales(codigo)) {
 			throw new GarantiaExtendidaException(PRODUCTO_NO_CUENTA_CON_GARANTIA);
 		} else {
 			Producto producto = repositorioProducto.obtenerPorCodigo(codigo);
-			if(producto!=null) {
-				Date fechaSolicitudGarantia = new Date();
-				Date fechaFinGarantia = null;
-				double precioGarantia = 0d;
+			if (producto != null) {
+				GarantiaExtendida garantiaExtendida = null;
+				GarantiaExtendidaFactory factory = null;
+				GarantiaExtendidaAbstract garantiaExtendidaAbstract = null;
 				if (producto.getPrecio() > PRECIO_TOPE) {
-					fechaFinGarantia = obtenerfechaFinGarantia(fechaSolicitudGarantia, DIAS_PARA_PRECIO_MAYOR_A_TOPE);
-					precioGarantia = producto.getPrecio() * (PORCENTAJE_PARA_PRECIO_MAYOR_A_TOPE / 100);
+					factory = new GarantiaExtendidaMayorPrecioFactory();
+					garantiaExtendidaAbstract = factory.crear();
+					garantiaExtendida = garantiaExtendidaAbstract.generaGarantiaExtendida(producto,nombreCliente);
 				} else {
-					fechaFinGarantia = obtenerfechaFinGarantia(fechaSolicitudGarantia, DIAS_PARA_PRECIO_MENOR_A_TOPE);
-					precioGarantia = producto.getPrecio() * (PORCENTAJE_PARA_PRECIO_MENOR_A_TOPE / 100);
+					factory = new GarantiaExtendidaMenorPrecioFactory();
+					garantiaExtendidaAbstract = factory.crear();
+					garantiaExtendida = garantiaExtendidaAbstract.generaGarantiaExtendida(producto,nombreCliente);
 				}
-				GarantiaExtendida garantiaExtendida = new GarantiaExtendida(producto, fechaSolicitudGarantia,
-						fechaFinGarantia, precioGarantia, nombre);
 				repositorioGarantia.agregar(garantiaExtendida);
-			}else {
+			} else {
 				throw new GarantiaExtendidaException(PRODUCTO_NO_EXISTE);
 			}
-			
+
 		}
 
 	}
@@ -76,25 +71,6 @@ public class Vendedor {
 			}
 		}
 		return mapaVocalesEncontradas.size() > 2;
-	}
-
-	public Date obtenerfechaFinGarantia(Date fechaActual, int cantidadDeDias) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(fechaActual);
-		if (DIAS_PARA_PRECIO_MAYOR_A_TOPE == cantidadDeDias) {
-			while (cantidadDeDias > 0) {
-				if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
-					cantidadDeDias--;
-				}
-				calendar.add(Calendar.DAY_OF_YEAR, 1);
-			}
-			if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-				calendar.add(Calendar.DAY_OF_YEAR, 2);
-			}
-		} else {
-			calendar.add(Calendar.DAY_OF_YEAR, cantidadDeDias - 1);
-		}
-		return calendar.getTime();
 	}
 
 }
