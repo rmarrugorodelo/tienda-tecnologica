@@ -1,22 +1,18 @@
 package dominio;
 
-import dominio.repositorio.RepositorioProducto;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import dominio.excepcion.GarantiaExtendidaException;
 import dominio.fabrica.GenerarGarantiaExtendidaFactory;
-import dominio.fabrica.GenerarGarantiaExtendidaMayorPrecioFactory;
-import dominio.fabrica.GenerarGarantiaExtendidaMenorPrecioFactory;
 import dominio.fabrica.IGenerarGarantiaExtendida;
 import dominio.repositorio.RepositorioGarantiaExtendida;
+import dominio.repositorio.RepositorioProducto;
 
 public class Vendedor {
 
 	public static final String EL_PRODUCTO_TIENE_GARANTIA = "El producto ya cuenta con una garantia extendida";
 	public static final String PRODUCTO_NO_CUENTA_CON_GARANTIA = "Este producto no cuenta con garantía extendida";
-	public static final String PRODUCTO_NO_EXISTE = "Este producto no existe";
 
 	public static final double PRECIO_TOPE = 500000;
 
@@ -36,24 +32,11 @@ public class Vendedor {
 			throw new GarantiaExtendidaException(PRODUCTO_NO_CUENTA_CON_GARANTIA);
 		} else {
 			Producto producto = repositorioProducto.obtenerPorCodigo(codigo);
-			if (producto != null) {
-				GarantiaExtendida garantiaExtendida = null;
-				GenerarGarantiaExtendidaFactory factory = null;
-				IGenerarGarantiaExtendida iGarantiaExtendida = null;
-				if (producto.getPrecio() > PRECIO_TOPE) {
-					factory = new GenerarGarantiaExtendidaMayorPrecioFactory();
-					iGarantiaExtendida = factory.crear();
-					garantiaExtendida = iGarantiaExtendida.generaGarantiaExtendida(producto,nombreCliente);
-				} else {
-					factory = new GenerarGarantiaExtendidaMenorPrecioFactory();
-					iGarantiaExtendida = factory.crear();
-					garantiaExtendida = iGarantiaExtendida.generaGarantiaExtendida(producto,nombreCliente);
-				}
-				repositorioGarantia.agregar(garantiaExtendida);
-			} else {
-				throw new GarantiaExtendidaException(PRODUCTO_NO_EXISTE);
-			}
-
+			GarantiaExtendida garantiaExtendida = null;
+			GenerarGarantiaExtendidaFactory factory = new GenerarGarantiaExtendidaFactory();
+			IGenerarGarantiaExtendida iGarantiaExtendida = factory.crear(producto);
+			garantiaExtendida = iGarantiaExtendida.generaGarantiaExtendida(producto, nombreCliente);
+			repositorioGarantia.agregar(garantiaExtendida);
 		}
 
 	}

@@ -20,6 +20,7 @@ import testdatabuilder.ProductoTestDataBuilder;
 public class VendedorTest {
 
 	private static final String COMPUTADOR_LENOVO = "Computador Lenovo";
+	private static final String CODIGO_PRODUCTO_TRES_VOCALES = "S0OIU1H1AT51";
 	private static final double PRECIO = 400000;
 	
 	private SistemaDePersistencia sistemaPersistencia;
@@ -102,5 +103,21 @@ public class VendedorTest {
 		Assert.assertTrue(vendedor.tieneGarantia(producto.getCodigo()));
 		Assert.assertNotNull(repositorioGarantia.obtenerProductoConGarantiaPorCodigo(producto.getCodigo()));
 
+	}
+	
+	@Test
+	public void codigoProductoNoAplicaGarantiaTest() {
+		Producto producto = new ProductoTestDataBuilder().conCodigo(CODIGO_PRODUCTO_TRES_VOCALES).build();
+		GarantiaExtendida garantiaExtendida = new GarantiaTestDataBuilder().build();
+		Vendedor vendedor = new Vendedor(repositorioProducto, repositorioGarantia);
+		try {
+			
+			vendedor.generarGarantia(producto.getCodigo(),garantiaExtendida.getNombreCliente());
+			fail();
+			
+		} catch (GarantiaExtendidaException e) {
+			// assert
+			Assert.assertEquals(Vendedor.PRODUCTO_NO_CUENTA_CON_GARANTIA, e.getMessage());
+		}
 	}
 }

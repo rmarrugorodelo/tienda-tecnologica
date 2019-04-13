@@ -37,7 +37,7 @@ public class GenerarGarantiaExtendidaMayorPrecio implements IGenerarGarantiaExte
 
 	@Override
 	public double calcularPrecioGarantia(double precio) {
-		return precio * (PORCENTAJE / CIEN);
+		return precio * PORCENTAJE / CIEN;
 	}
 
 }
